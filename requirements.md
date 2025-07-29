@@ -199,4 +199,32 @@ dependencies = ["notifypy>=1.4"]
 
 ⸻
 
+10 — Bonus `stopwatch` Decorator
+
+An optional sugar decorator for default use:
+
+```
+from pocketwatch.decorators import stopwatch
+
+@stopwatch
+def some_func(): ...
+
+@stopwatch(sound=True)
+def another(): ...
+```
+
+* Behaves like a `Pocketwatch(...)` with:
+  * `msg = func.__name__`
+  * `notify=True`, `notify_after=0.0`
+  * `sound=False`
+  * `log_mode="log"`
+
+This is not included in the main import path. Users must import manually:
+
+```python
+from pocketwatch.decorators import stopwatch
+```
+
+⸻
+
 End of requirements.
