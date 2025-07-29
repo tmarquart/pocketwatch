@@ -26,3 +26,6 @@ ignore_missing_imports = true
 [tool.ruff]
 select = ["E", "F"]
 line-length = 88
+
+[tool.setuptools.package-data]
+"pocketwatch.data" = ["*.wav"]
