@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional, Protocol, Type, Literal
 from types import TracebackType
+from notifypy import Notify
 
 
 class NotifierProtocol(Protocol):
@@ -16,15 +17,9 @@ class NotifierProtocol(Protocol):
         ...
 
 
-try:
-    from notifypy import Notify
-except Exception:  # pragma: no cover - optional dep may be missing
-    Notify = None  # type: ignore
 
 
-def _default_notifier() -> Optional[NotifierProtocol]:
-    if Notify is None:
-        return None
+def _default_notifier() -> NotifierProtocol:
 
     class _Notifier:
         def send(self, title: str, message: str, sound_path: str | None = None) -> None:

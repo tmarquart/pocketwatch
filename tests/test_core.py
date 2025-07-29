@@ -3,9 +3,28 @@ from __future__ import annotations
 import os
 import sys
 import pstats
+import types
 import pytest
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+import importlib
+
+try:
+    importlib.import_module("notifypy")
+except Exception:
+    dummy = types.SimpleNamespace()
+    class DummyNotify:
+        def __init__(self) -> None:
+            self.title = ""
+            self.message = ""
+            self.audio: str | None = None
+
+        def send(self) -> None:
+            pass
+
+    dummy.Notify = DummyNotify
+    sys.modules['notifypy'] = dummy
 
 import src.pocketwatch.core as core
 from src.pocketwatch import Pocketwatch
