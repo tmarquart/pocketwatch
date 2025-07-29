@@ -7,8 +7,8 @@ import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-import pocketwatch.core as core
-from pocketwatch.core import Pocketwatch
+import src.pocketwatch.core as core
+from src.pocketwatch import Pocketwatch
 
 
 class FakeNotifier:

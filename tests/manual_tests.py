@@ -1,5 +1,4 @@
-import pocketwatch.core as core
-from pocketwatch.core import Pocketwatch
+from src.pocketwatch import Pocketwatch
 
 def basic_test():
     pw=Pocketwatch()
