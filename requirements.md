@@ -65,7 +65,7 @@ notifier	None	If None, use builtin notifypy backend.
 
 4.4 Sound
 	•	Parameters: sound: bool = False, sound_after: float = 60.0, sound_file (default = bundled ding.wav).
-	•	Plays via playsound; fallback to winsound.Beep (Windows) or ASCII bell (\a) when unavailable.
+        •       Sound playback uses notifypy's built-in audio support.
 	•	Fires when sound==True and elapsed ≥ sound_after.
 
 4.5 Incremental Mode
@@ -155,7 +155,7 @@ Spellbook is not documented in README; discoverable via dir(pocketwatch).
 
 Category	Requirement
 Python	3.9 +
-Dependencies	Hard: stdlib. Optional extras: notifypy → notify extra; playsound → sound extra.
+Dependencies    Hard: stdlib and notifypy.
 Wheel size	< 50 kB including WAVs
 Perf	Start + stop overhead ≤ 0.05 ms on 2 GHz CPU (no profiling).
 Platforms	Win / macOS / Linux; degrade silently if D-Bus, etc., absent.
@@ -184,9 +184,9 @@ recursive-include pocketwatch/data *.wav
 
 pyproject.toml excerpt
 
-[project.optional-dependencies]
-notify = ["notifypy>=1.4"]
-sound  = ["playsound>=1.3"]
+[project]
+dependencies = ["notifypy>=1.4"]
+
 
 
 ⸻
