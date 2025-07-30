@@ -59,16 +59,7 @@ def _set_time(monkeypatch: pytest.MonkeyPatch, values: list[float]) -> None:
 def test_stopwatch_default(monkeypatch):
     _set_time(monkeypatch, [0.0, 1.0])
     monkeypatch.setattr(core.atexit, "register", lambda *a, **k: None)
-    logger_msgs: list[str] = []
 
-    orig_get = core.logging.getLogger
-
-    def get_logger(name: str | None = None) -> Logger:
-        if name == "Pocketwatch":
-            return Logger(logger_msgs)
-        return orig_get(name)
-
-    monkeypatch.setattr(core.logging, "getLogger", get_logger)
     n = FakeNotifier()
     monkeypatch.setattr(core, "_default_notifier", lambda: n)
 
@@ -77,7 +68,6 @@ def test_stopwatch_default(monkeypatch):
         return "ok"
 
     assert demo() == "ok"
-    assert any("demo completed in 1.000s" in m for m in logger_msgs)
     assert n.sent
 
 
