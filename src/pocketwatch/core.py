@@ -49,39 +49,35 @@ class Pocketwatch:
                  *,
                  notify: bool = True,
                  notify_after: float = 0.0,
-                 notifier: NotifierProtocol | None = None,
+                 precision=3,
                  sound: bool = False,
                  sound_after: float = 60.0,
-                 sound_file: str | Path | None = None,
                  incremental: bool = False,
                  increment_cutoff: float = 0.5,
                  profile: bool = False,
-                 profile_output_path: str | Path | None = None,
-                 log_mode: str = "both",
+                 profile_output_path: str | Path | None = 'profile_output.prof',
+                 print_output: str = True,
                  logger: logging.Logger | None = None,
                  log_level: int = logging.INFO,
-                 _disable_atexit: bool = False) -> None:
+                 **kwargs) -> None:
         self.msg = msg or "block"
+        self.precision = precision
         self.notify = notify
         self.notify_after = notify_after
         self.sound = sound
         self.sound_after = sound_after
-        self.sound_file = (
-            Path(sound_file) if sound_file else _find_data_file("ding.wav")
-        )
-        self.notifier = (
-            notifier if notifier is not None else _default_notifier()
-        )
+        self.sound_file = Path(kwargs.get("sound_file", _find_data_file("ding.wav")))
+        self.notifier = kwargs.get("notifier", _default_notifier())
         self.incremental = incremental
         self.increment_cutoff = increment_cutoff
         self.profile = profile
         self.profile_output_path = (
             Path(profile_output_path) if profile_output_path else None
         )
-        self.log_mode = log_mode
-        self.logger = logger or logging.getLogger("Pocketwatch")
+        self.print_output=print_output
+        self.logger = logger
         self.log_level = log_level
-        self._disable_atexit = _disable_atexit
+        self._disable_atexit = kwargs.get("_disable_atexit", False)
 
         self._start = time.perf_counter()
         self._ended = False
@@ -111,10 +107,12 @@ class Pocketwatch:
         self._marks.append(_Mark(note=note, elapsed=el))
         if self.incremental and el < self.increment_cutoff:
             return
-        self._log(f"{note} at {el:.3f}s")
+        self._log(f"{note} at {el:.{self.precision}f}s")
 
     # ------------------------------------------------------------------
-    def end(self, *, return_stats: bool = False) -> Optional[pstats.Stats]:
+    def end(self, msg=None, *, return_stats: bool = False) -> Optional[pstats.Stats]:
+
+        self.msg=msg if msg is not None else self.msg
         if self._ended:
             return self._stats() if return_stats else None
         self._ended = True
@@ -127,10 +125,10 @@ class Pocketwatch:
         if self.unexpected_exit:
             msg = (
                 f"[Pocketwatch] {self.msg} interrupted by interpreter shutdown"
-                f" after {elapsed:.3f}s"
+                f" after {elapsed:.{self.precision}f}s"
             )
         else:
-            msg = f"[Pocketwatch] {self.msg} completed in {elapsed:.3f}s"
+            msg = f"[Pocketwatch] {self.msg} completed in {elapsed:.{self.precision}f}s"
         self._log(msg)
 
         if self.profile and return_stats:
@@ -162,10 +160,11 @@ class Pocketwatch:
 
     # ------------------------------------------------------------------
     def _log(self, message: str) -> None:
-        if self.log_mode in {"log", "both", "custom"}:
-            self.logger.log(self.log_level, message)
-        if self.log_mode in {"print", "both"}:
+        """Emit a message to stdout and/or logger, depending on config."""
+        if self.print_output:
             print(message)
+        if self.logger:
+            self.logger.log(self.log_level, message)
 
     # ------------------------------------------------------------------
     def _atexit_stop(self) -> None:

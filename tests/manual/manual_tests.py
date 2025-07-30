@@ -17,6 +17,10 @@ def decorator_test():
 
     fxn()
 
+def precision_test():
+    pw=Pocketwatch(precision=5)
+    pw.end('precise')
+
 def unexpected_test():
     pwx=Pocketwatch()
 
@@ -24,4 +28,5 @@ if __name__ == "__main__":
     basic_test()
     ding_test()
     decorator_test()
+    precision_test()
     unexpected_test()
