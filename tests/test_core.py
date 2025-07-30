@@ -13,7 +13,7 @@ import importlib
 try:
     importlib.import_module("notifypy")
 except Exception:
-    dummy = types.SimpleNamespace()
+    dummy = types.ModuleType("notifypy")
     class DummyNotify:
         def __init__(self) -> None:
             self.title = ""
@@ -23,8 +23,8 @@ except Exception:
         def send(self) -> None:
             pass
 
-    dummy.Notify = DummyNotify
-    sys.modules['notifypy'] = dummy
+    setattr(dummy, "Notify", DummyNotify)
+    sys.modules["notifypy"] = dummy
 
 import src.pocketwatch.core as core
 from src.pocketwatch import Pocketwatch
