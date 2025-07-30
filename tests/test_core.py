@@ -81,7 +81,7 @@ def test_incremental_suppresses(monkeypatch, capsys):
 def test_profile_returns_stats(monkeypatch):
     _set_time(monkeypatch, [0.0, 1.0])
     with Pocketwatch(
-        profile=True, notify=False, sound=False, _disable_atexit=True
+        profile=True, notify=False, sound=False, _disable_atexit=True,profile_output_path=None
     ) as pw:
         pass
     stats = pw.end(return_stats=True)

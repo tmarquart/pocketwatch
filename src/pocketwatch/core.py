@@ -17,8 +17,6 @@ class NotifierProtocol(Protocol):
         ...
 
 
-
-
 def _default_notifier() -> NotifierProtocol:
 
     class _Notifier:
@@ -49,7 +47,7 @@ class Pocketwatch:
                  *,
                  notify: bool = True,
                  notify_after: float = 0.0,
-                 precision=3,
+                 precision: int = 3,
                  sound: bool = False,
                  sound_after: float = 60.0,
                  incremental: bool = False,
@@ -159,6 +157,11 @@ class Pocketwatch:
         return None
 
     # ------------------------------------------------------------------
+
+    def log(self,note):
+        """Alias for mark"""
+        self.mark(note)
+
     def _log(self, message: str) -> None:
         """Emit a message to stdout and/or logger, depending on config."""
         if self.print_output:

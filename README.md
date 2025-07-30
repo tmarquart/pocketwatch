@@ -26,15 +26,14 @@ and sound are disabled unless explicitly requested.
 with Pocketwatch(
     "big task",
     notify=True,          # show a pop-up
-    notify_after=5.0,     # minimum duration for pop-up
+    notify_after=5.0,     # minimum duration before popup
     sound=True,           # play ding.wav
     sound_after=60.0,     # minimum duration for sound
 ):
     run_big_task()
 ```
 
-To access the cProfile integration, call `end(return_stats=True)` at the end of
-your block or use the object as a context manager and request profiling.
+To access the cProfile integration, set profile=true; by defualt this will log your stats to the working directory. They can also be returned with the return_stats variable for end.
 
 ```python
 with Pocketwatch(profile=True) as pw:
@@ -66,7 +65,7 @@ def background_job():
 ## Features
 
 - Drop-in context manager for timing code blocks
-- Optional desktop notifications via [notifypy](https://pypi.org/project/notifypy/)
+- Desktop notifications via [notifypy](https://pypi.org/project/notifypy/)
 - Optional sound playback with bundled audio files
 - Incremental mode to suppress output for short runs
 - cProfile support with stats returned on request
