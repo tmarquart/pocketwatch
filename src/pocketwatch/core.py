@@ -57,7 +57,7 @@ class Pocketwatch:
                  increment_cutoff: float = 0.5,
                  profile: bool = False,
                  profile_output_path: str | Path | None = None,
-                 log_mode: str = "log",
+                 log_mode: str = "both",
                  logger: logging.Logger | None = None,
                  log_level: int = logging.INFO,
                  _disable_atexit: bool = False) -> None:
