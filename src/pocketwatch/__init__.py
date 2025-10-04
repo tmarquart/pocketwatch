@@ -1,6 +1,6 @@
-from .core import Pocketwatch
+from .core import Pocketwatch, notify
 
-__all__ = ["Pocketwatch"]
+__all__ = ["Pocketwatch", "notify"]
 
 
 def __getattr__(name: str):
@@ -8,3 +8,4 @@ def __getattr__(name: str):
         from . import spellbook as sb
         return sb
     raise AttributeError(name)
+
