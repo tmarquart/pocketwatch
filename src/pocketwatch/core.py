@@ -35,6 +35,24 @@ def _find_data_file(name: str) -> Path:
     return Path(__file__).with_name("data").joinpath(name)
 
 
+def notify(
+    message: str,
+    *,
+    title: str = "Pocketwatch",
+    sound: bool = False,
+    sound_file: str | Path | None = None,
+    notifier: NotifierProtocol | None = None,
+) -> None:
+    """Send a notification using Pocketwatch defaults."""
+
+    selected_notifier = notifier or _default_notifier()
+    sound_path: str | None = None
+    if sound:
+        path = Path(sound_file) if sound_file is not None else _find_data_file("ding.wav")
+        sound_path = str(path)
+    selected_notifier.send(title, message, sound_path)
+
+
 @dataclass
 class _Mark:
     note: str

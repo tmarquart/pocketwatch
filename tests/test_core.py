@@ -27,7 +27,7 @@ except Exception:
     sys.modules["notifypy"] = dummy
 
 import src.pocketwatch.core as core
-from src.pocketwatch import Pocketwatch
+from src.pocketwatch import Pocketwatch, notify
 
 
 class FakeNotifier:
@@ -118,3 +118,20 @@ def test_atexit_stop(monkeypatch):
     pw._atexit_stop()
     assert pw.unexpected_exit
     assert pw._ended
+
+
+def test_notify_function_uses_notifier():
+    fake = FakeNotifier()
+    notify("hello", title="Custom", notifier=fake)
+    assert fake.sent == [("Custom", "hello", None)]
+
+
+def test_notify_function_default_sound():
+    fake = FakeNotifier()
+    notify("hello", sound=True, notifier=fake)
+    assert len(fake.sent) == 1
+    title, message, sound_path = fake.sent[0]
+    assert title == "Pocketwatch"
+    assert message == "hello"
+    assert sound_path is not None
+    assert sound_path.endswith("ding.wav")
